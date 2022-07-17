@@ -18,126 +18,6 @@ from nltk.corpus import stopwords
 
 
 
-# # create elbow plot with kmeans to find optimal number of clusters
-# def create_elbow_plot_kmeans(df, num_clusters, init_method='k-means++', n_init=10, random_state=42, plot=True, template='simple_white', save=False):
-#     '''
-#     create elbow plot with kmeans to find optimal number of clusters based on inertia
-#     where the clusters strikes a balance between being not segmented enough and being too fragmented
-    
-#     we look for the point of diminishing returns (also known as the 'elbow') in terms of the inertia,
-#     where inertia is how close the data points are to their respective centers or centroids
-    
-#     arguments:
-#     df (df): a dataframe of data to cluster
-#     num_clusters (int): number of clusters to plot
-#     init_method (str): default to 'k-means++', other option is 'random'
-#     n_init (int): default to 10, number of times to run model, cost from the best run will be used
-#     random_state (int): default to 42, random seed used to initialise the model
-#     plot (bool): default to True, option to turn off plots
-#     template (str): default to 'simple_white', change as desired
-#     save (bool): default to False, if True save plot as .html file
-
-#     returns:
-#     a list of inertia for each run
-#     '''
-
-#     # create empty list to store inertia for each run
-#     inertia = []
-#     # define range of clusters to try
-#     k = range(2, num_clusters+1)
-
-#     # loop through number of clusters
-#     for num_clusters in tqdm(k):
-#         # define model
-#         kmeans = KMeans(n_clusters=num_clusters, init=init_method, n_init=n_init, random_state=random_state)
-#         # fit and predict data
-#         kmeans.fit_predict(df)
-#         # get predicted labels
-#         predicted_labels = kmeans.labels_
-#         # append score to list of scores
-#         inertia.append(kmeans.inertia_)
-
-#     # plot elbow plot
-#     if plot:
-#         fig = px.line(
-#             pd.DataFrame({'num_clusters':list(k), 'inertia':inertia}), 
-#             x='num_clusters', 
-#             y='inertia',
-#             title='Elbow Plot for Optimal Number of Clusters with '+init_method,
-#             markers=True,
-#             template=template,
-#             width=800,
-#             height=500,
-#             )
-#         st.plotly_chart(fig, use_container_width=True)
-#         if save:
-#             fig.write_html('Elbow Plot for Optimal Number of Clusters with '+init_method+'.html')
-    
-#     # return
-#     return inertia
-
-
-
-# # create plot of silhouette scores with sklearn model to find optimal number of clusters
-# def silhouette_score_plot_kmeans(df, num_clusters, init_method='k-means++', n_init=10, random_state=42, plot=True, template='simple_white', save=False):
-#     '''
-#     create plot of silhouette score with kmeans to find optimal number of clusters
-#     where the clusters strikes a balance between being not segmented enough and being too fragmented
-#     the closer the score is to 1, the more easily distinguishable are the clusters from each other
-    
-#     arguments:
-#     df (df): a dataframe of data to cluster
-#     num_clusters (int): number of clusters to plot
-#     init_method (str): default to 'k-means++', other option is 'random'
-#     n_init (int): default to 10, number of times to run model, cost from the best run will be used
-#     random_state (int): default to 42, random seed used to initialise the model
-#     plot (bool): default to True, option to turn off plots
-#     template (str): default to 'simple_white', change as desired
-#     save (bool): default to False, if True save plot as .html file
-
-#     returns:
-#     a list of silhouette scores for each run
-#     '''
-
-#     # create empty list to store silhoutte scores for each run
-#     silhouette_scores = []
-#     # define range of clusters to try
-#     k = range(2, num_clusters+1)
-
-#     # loop through number of clusters
-#     for num_clusters in tqdm(k):
-#         # define model
-#         kmeans = KMeans(n_clusters=num_clusters, init=init_method, n_init=n_init, random_state=random_state)
-#         # fit and predict data
-#         kmeans.fit_predict(df)
-#         # get predicted labels
-#         predicted_labels = kmeans.labels_
-#         # get silhoutte score
-#         score = silhouette_score(df, predicted_labels)
-#         # append score to list of scores
-#         silhouette_scores.append(score)
-        
-#     # plot silhouette scores
-#     if plot:
-#         fig = px.line(
-#             pd.DataFrame({'num_clusters':list(k), 'silhouette_scores':silhouette_scores}), 
-#             x='num_clusters', 
-#             y='silhouette_scores',
-#             title='Silhouette Scores for Optimal Number of Clusters with '+init_method,
-#             markers=True,
-#             template=template,
-#             width=800,
-#             height=500,
-#             )
-#         st.plotly_chart(fig, use_container_width=True)
-#         if save:
-#             fig.write_html('Silhouette Scores for Optimal Number of Clusters with '+init_method+'.html')
-    
-#     # return
-#     return silhouette_scores
-
-
-
 # replace text with multiple replacements
 def replace_text(string, dict_of_replacements):
     '''
@@ -379,5 +259,41 @@ def convert_zero_shot_classification_output_to_dataframe(model_output):
     # drop unused columns
     results = results.drop(['labels', 'scores'], axis=1)
 
+    # return
+    return results
+
+
+# convert transformer model sentiment classification prediction into dataframe
+def convert_sentiment_classification_output_to_dataframe(text_input, model_output):
+    '''
+    convert sentiment classification output into a dataframe
+
+    the model used distilbert-base-uncased-finetuned-sst-2-english outputs a list of lists with two dictionaries,
+    within each dictionary is a label negative or postive and the respective score
+    [
+        [
+            {'label': 'NEGATIVE', 'score': 0.18449656665325165},
+            {'label': 'POSITIVE', 'score': 0.8155034780502319}
+            ],
+            ...
+    ]
+    the scores sum up to 1, and we extract only the positive score in this function,
+    append the scores to the model's input and return a dataframe
+
+    arguments:
+    text_input (list): a list of sequences that is input for the model
+    model_output (list): a list of labels and scores
+
+    return:
+    a dataframe of sequences and sentiment score
+
+    '''
+    # store model positive scores as dataframe
+    results = pd.DataFrame(model_output)[[1]]
+    # get score from column
+    results = results[1].apply(lambda x: x.get('score'))
+    # store input sequences and scores as dataframe
+    results = pd.DataFrame({'sequence':text_input, 'score':results})
+    
     # return
     return results

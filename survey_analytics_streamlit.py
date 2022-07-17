@@ -18,6 +18,8 @@ from scipy.stats import zscore
 
 # nlp
 from bertopic import BERTopic
+from transformers import pipeline
+import transformers
 
 # custom
 import survey_analytics_library as LIB
@@ -60,6 +62,14 @@ def read_topic_results():
     topic_results = pd.read_csv(data_path+'topic_results.csv')
     return topic_results
 topic_results = read_topic_results()
+
+@st.cache
+def read_climate_change_results():
+    sentiment_results = pd.read_csv(data_path+'sentiment_results.csv')
+    zero_shot_results = pd.read_csv(data_path+'zero_shot_results.csv')
+    return sentiment_results, zero_shot_results
+sentiment_results, zero_shot_results = read_climate_change_results()
+
 
 # write title of app
 st.title('DACoP - Survey Analytics')
@@ -347,7 +357,7 @@ last_topic = topics_df['Topic'].iloc[-1]
 
 # interative form for user to select a topic and inspect its top words and tweets
 with st.form('inspect_tweets'):
-    inspect_topic = st.number_input(f'Enter Topic (from {first_topic} to {last_topic}) to Inspect:', min_value=first_topic, max_value=last_topic, value=8)
+    inspect_topic = st.number_input(f'Enter Topic (from {first_topic} to {last_topic}) to Inspect:', min_value=first_topic, max_value=last_topic, value=9)
     submit = st.form_submit_button('Inspect Topic')
 
 # get top five words from list of tuples
@@ -366,7 +376,184 @@ st.markdown('''---''')
 
 
 st.header('Classifiying Text Responses and Sentiment Analysis')
-st.write('''
-    
+st.write(f'''
+    With survey responses, sometimes as a business user, we already have an general idea of what responders are talking about and we want to categorise or classify the responses accordingly.  
+    An an example, within the topic of 'Climate Change', we are interested in finance, politics, technology, and wildlife.  
+    Using **Zero-shot Classification**, we can classify responses into one of these four categories.  
+    As an added bonus, we can also find out how responders feel about the categories using **Sentiment Analysis**.  
+    We'll use a different set of 10,000 tweets related to climate change.  
     ''')
 st.write('\n')
+
+# rename column
+sentiment_results = sentiment_results.rename(columns={'sequence':'Tweet'})
+st.dataframe(sentiment_results[['Tweet']])
+
+@st.cache(allow_output_mutation=True)
+def load_transfomer_pipelines():
+    classifier_zero_shot = pipeline(
+        task='zero-shot-classification', 
+        model=model_path+'distilbart-mnli-12-1', 
+        return_all_scores=True
+        )
+    classifier_sentiment = pipeline(
+        task='sentiment-analysis', 
+        model=model_path+'distilbert-base-uncased-finetuned-sst-2-english', 
+        return_all_scores=True
+        )
+    return classifier_zero_shot, classifier_sentiment
+classifier_zero_shot, classifier_sentiment = load_transfomer_pipelines()
+
+# define candidate labels
+candidate_labels = [
+    'finance',
+    'politics',
+    'technology',
+    'wildlife',
+]
+
+# define sample tweet
+sample_tweet_index = 5000
+
+# define the first and last topic number
+# create range of index
+tweet_index = sentiment_results.index
+first_tweet = tweet_index[0]
+last_tweet = tweet_index[-1]
+
+st.write(f'''
+    As a demonstration, we'll define some categories and pick a tweet to classify and determine its sentiment.  
+    Feel free to add your own categories or even input your own text!  
+    ''')
+
+# interactive input for user to define candidate labels and tweet index for analysis
+with st.form('classify_tweets'):
+    # input for labels
+    user_defined_labels = st.text_input('Enter categories (separate categories by comma):', ', '.join(candidate_labels))
+    candidate_labels = user_defined_labels
+    # input for tweet index
+    user_define_tweet = st.number_input(f'Enter tweet index (from {first_tweet} to {last_tweet}) to classify:', min_value=first_tweet, max_value=last_tweet, value=sample_tweet_index)
+    sample_tweet_index = user_define_tweet
+    sample_tweet = sentiment_results['Tweet'].iloc[sample_tweet_index]
+    # input for user defined text
+    user_defined_input = st.text_input('Enter custom text (optional, leave blank to use Tweets):', '')
+    # check if user has entered any custom text
+    # if user_define_input is not blank, then override sample_tweet
+    if user_defined_input:
+        sample_tweet = user_defined_input
+
+    # submit form
+    submit = st.form_submit_button('Classify Tweet')
+
+st.write('\n')
+st.write(f'''
+    Here are the results:  
+    ''')
+st.write(f'Input Text: *\'{sample_tweet}\'*')
+
+# get predictions from models
+zero_shot_sample = classifier_zero_shot(sample_tweet, candidate_labels)
+sentiment_sample = classifier_sentiment(sample_tweet)
+
+# get sentiment
+sentiment_sample = sentiment_sample[1].get('score')
+sentiment_label = 'positive'
+if sentiment_sample < 0.5:
+    sentiment_label = 'negative'
+
+st.write(f'''
+    The main category is: **{zero_shot_sample['labels'][0]}** with a score of {round(zero_shot_sample['scores'][0], 2)}  
+    Main category score ranges from 0 to 1, with 1 being very likely.  
+
+    The full set of scores are: {dict(zip(zero_shot_sample['labels'], [round(score, 2) for score in zero_shot_sample['scores']]))}  
+    Full set of scores cores add up to 1.    
+    
+    The sentiment is: **{sentiment_label}** with a score of {round(sentiment_sample, 2)}  
+    Sentiment score ranges from 0 to 1, with 1 being very positive.  
+    ''')
+st.write('\n')
+st.write('\n')
+
+# drop unused columns and rename columns
+zero_shot_results = zero_shot_results.drop('labels_scores', axis=1)
+zero_shot_results = zero_shot_results.rename(columns={'sequence':'tweet', 'label':'category'})
+st.write(f'''
+    Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
+    ''')
+
+st.dataframe(zero_shot_results)
+
+st.write(f'''
+    We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
+    It is likely that the tweet does not natually fall into one of the defined categories.  
+    Before performing further analysis on our results, we can set a score threshold to only keep predictions that we're confident in.  
+    ''')
+st.write('\n')
+
+# interactive input for user to define candidate labels and tweet index for analysis
+with st.form('classification_score_threshold'):
+    user_defined_threshold = st.number_input('Enter score threshold (between 0.01 and 0.99):', min_value=0.01, max_value=0.99, value=0.7, step=0.05)
+    # submit form
+    submit = st.form_submit_button('Set Threshold')
+st.write('\n')
+
+# filter and keep results with score above defined threshold
+zero_shot_results_clean = zero_shot_results.loc[(zero_shot_results['score'] >= user_defined_threshold)].copy()
+
+# rename columns
+sentiment_results.columns = ['tweet', 'sentiment']
+
+st.write(f'''
+    The predictions get better with a higher threshold, but reduces the final number of tweets available for further analysis.  
+    Out of the 10,000 tweets, we are now left with {len(zero_shot_results_clean)}.  
+    We also add on the sentiment score for the tweets, the score here ranges from 0 (most negative) to 1 (most positive).  
+    ''')
+
+# merge in sentiment score on index
+# drop unused columns
+classification_sentiment_df = pd.merge(zero_shot_results_clean, sentiment_results[['sentiment']], how='left', left_index=True, right_index=True)
+classification_sentiment_df = classification_sentiment_df[['tweet', 'category', 'score', 'sentiment']]
+st.dataframe(classification_sentiment_df)
+
+st.write(f'''
+    The difficult part for zero-shot classification is defining the right set of categories for each business case.  
+    Some trial and error is required to find the appropriate words that can return the optimal results.   
+    ''')
+st.write('\n')
+
+# group by category, count tweets and get mean of sentiment
+classification_sentiment_agg = classification_sentiment_df.groupby(['category']).agg({'tweet':'count', 'sentiment':'mean'}).reset_index()
+classification_sentiment_agg = classification_sentiment_agg.rename(columns={'tweet':'count'})
+
+st.write(f'''
+    Finally, we can visualise the percentage of tweets in each category and the respective average sentiment scores.  
+    ''')
+
+fig = px.pie(
+    classification_sentiment_agg,
+    values='count',
+    names='category',
+    hole=0.35,
+    title='Percentage of Tweets in Each Category',
+    template='simple_white',
+    width=1000,
+    height=600
+)
+fig.update_traces(textposition='inside', textinfo='percent+label')
+st.plotly_chart(fig)
+
+fig = px.bar(
+    classification_sentiment_agg,
+    x='category',
+    y='sentiment',
+    title='Average Sentiment of Tweets in Each Category <br><sup>Overall, the sentiment of the tweets are on the negative side.</sup>',
+    template='simple_white',
+    width=1000,
+    height=600
+)
+fig.update_yaxes(range=[0, 1])
+fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
+st.plotly_chart(fig)
+
+st.write('\n')
+st.markdown('''---''')
