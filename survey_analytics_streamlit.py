@@ -40,16 +40,10 @@ def read_survey_data():
 data_survey, data_questions = read_survey_data()
 
 @st.cache
-def read_tweet_data():
+def read_tokyo_data():
     tokyo = pd.read_csv(data_path+'tokyo_olympics_tweets.csv')
     return tokyo
-tokyo = read_tweet_data()
-
-@st.cache(allow_output_mutation=True)
-def load_bertopic_model_unclean():
-    topic_model = BERTopic.load(model_path+'bertopic_model_tokyo_olympics_tweets_unclean')
-    return topic_model
-topic_model_unclean = load_bertopic_model_unclean()
+tokyo = read_tokyo_data()
 
 @st.cache(allow_output_mutation=True)
 def load_bertopic_model():
@@ -282,15 +276,6 @@ st.write('''
     ''')
 st.write('\n')
 
-# # plot topics using unclean data
-# fig = LIB.visualize_barchart_titles(
-#     topic_model=topic_model_unclean,
-#     subplot_titles=None,
-#     n_words=5,
-#     top_n_topics=8,
-#     height=300
-# )
-
 # load and plot topics using unclean data
 with open('data/topics_tokyo_unclean.pickle', 'rb') as pkl:
     fig = pickle.load(pkl)
@@ -314,15 +299,6 @@ labelled_topics = [
     'Sam Kerr (Australian Footballer)',
     'Vikas Krishan (Indian Boxer)',
     ]
-
-# # plot topics using clean data with stopwords removed
-# fig = LIB.visualize_barchart_titles(
-#     topic_model=topic_model,
-#     subplot_titles=labelled_topics,
-#     n_words=5,
-#     top_n_topics=8,
-#     height=300
-# )
 
 # load plot topics using clean data with stopwords removed
 with open('data/topics_tokyo.pickle', 'rb') as pkl:
@@ -401,12 +377,12 @@ st.dataframe(sentiment_results[['Tweet']])
 def load_transfomer_pipelines():
     classifier_zero_shot = pipeline(
         task='zero-shot-classification', 
-        model=model_path+'distilbart-mnli-12-1', 
+        model='valhalla/distilbart-mnli-12-1',
         return_all_scores=True
         )
     classifier_sentiment = pipeline(
         task='sentiment-analysis', 
-        model=model_path+'distilbert-base-uncased-finetuned-sst-2-english', 
+        model = 'distilbert-base-uncased-finetuned-sst-2-english',
         return_all_scores=True
         )
     return classifier_zero_shot, classifier_sentiment
