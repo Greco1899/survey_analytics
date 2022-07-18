@@ -4,9 +4,7 @@
 # imports
 import streamlit as st
 import pandas as pd
-import numpy as np
 import os
-import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import pickle
@@ -66,7 +64,7 @@ sentiment_results, zero_shot_results = read_climate_change_results()
 
 
 # write title of app
-st.title('DACoP - Survey Analytics')
+st.title('Survey Analytic Techniques')
 st.markdown('''---''')
 
 
@@ -247,6 +245,8 @@ fig = px.pie(
     )
 st.plotly_chart(fig, use_container_width=True)
 st.markdown('''---''')
+st.write('\n')
+st.write('\n')
 
 
 
@@ -261,6 +261,7 @@ st.write('''
     ''')
 st.write('\n')
 
+st.subheader('Sample Tweets - Tokyo Olympics')
 st.write(f'''
     Here we have {len(tokyo):,} tweets from the Tokyo Olympics, going through them manually and coming up with topics would not be practical.  
     ''')
@@ -271,10 +272,10 @@ st.dataframe(tokyo)
 st.write('\n')
 st.write('\n')
 
+st.subheader('Visualising Topics')
 st.write('''
     Lets generate some topics without performing any cleaning to the data.  
     ''')
-st.write('\n')
 
 # load and plot topics using unclean data
 with open('data/topics_tokyo_unclean.pickle', 'rb') as pkl:
@@ -325,6 +326,7 @@ st.write(f'''
 st.dataframe(topics_df)
 st.write('\n')
 
+st.subheader('Inspecting Individual Topics')
 st.write('''
     One point to also note is that the machine is not only picking out keywords in a tweet to determine its topic.  
     The model has an understanding of the relationship between words, e.g. 'Andy Murray' is related to 'tennis'.  
@@ -353,7 +355,8 @@ st.write(f'''
 # display tweets from selected topic
 st.dataframe(topic_results.loc[(topic_results['Topic'] == inspect_topic)])
 st.markdown('''---''')
-
+st.write('\n')
+st.write('\n')
 
 
 
@@ -369,9 +372,14 @@ st.write(f'''
     ''')
 st.write('\n')
 
+st.subheader('Sample Tweets - Climate Change')
+st.write(f'''
+    We'll use a different set of {len(sentiment_results):,} tweets related to climate change.  
+    ''')
 # rename column
 sentiment_results = sentiment_results.rename(columns={'sequence':'Tweet'})
 st.dataframe(sentiment_results[['Tweet']])
+st.write('\n')
 
 @st.cache(allow_output_mutation=True)
 def load_transfomer_pipelines():
@@ -405,6 +413,7 @@ tweet_index = sentiment_results.index
 first_tweet = tweet_index[0]
 last_tweet = tweet_index[-1]
 
+st.subheader('Classifying Text')
 st.write(f'''
     As a demonstration, we'll define some categories and pick a tweet to classify and determine its sentiment.  
     Feel free to add your own categories or even input your own text!  
@@ -428,8 +437,8 @@ with st.form('classify_tweets'):
 
     # submit form
     submit = st.form_submit_button('Classify Tweet')
-
 st.write('\n')
+
 st.write(f'''
     Here are the results:  
     ''')
@@ -461,6 +470,8 @@ st.write('\n')
 # drop unused columns and rename columns
 zero_shot_results = zero_shot_results.drop('labels_scores', axis=1)
 zero_shot_results = zero_shot_results.rename(columns={'sequence':'tweet', 'label':'category'})
+
+st.subheader('Zero-Shot Classification and Sentiment Analysis Results')
 st.write(f'''
     Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
