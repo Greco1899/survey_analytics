@@ -368,7 +368,6 @@ st.write(f'''
     An an example, within the topic of 'Climate Change', we are interested in finance, politics, technology, and wildlife.  
     Using **Zero-shot Classification**, we can classify responses into one of these four categories.  
     As an added bonus, we can also find out how responders feel about the categories using **Sentiment Analysis**.  
-    We'll use a different set of {len(sentiment_results):,} tweets related to climate change.  
     ''')
 st.write('\n')
 
@@ -429,14 +428,14 @@ with st.form('classify_tweets'):
     sample_tweet_index = user_define_tweet
     sample_tweet = sentiment_results['Tweet'].iloc[sample_tweet_index]
     # input for user defined text
-    user_defined_input = st.text_input('Enter custom text (optional, leave blank to use Tweets):', '')
+    user_defined_input = st.text_input('Enter custom text (optional, leave blank to use tweets):', '')
     # check if user has entered any custom text
     # if user_define_input is not blank, then override sample_tweet
     if user_defined_input:
         sample_tweet = user_defined_input
 
     # submit form
-    submit = st.form_submit_button('Classify Tweet')
+    submit = st.form_submit_button('Classify Text')
 st.write('\n')
 
 st.write(f'''
@@ -535,7 +534,7 @@ fig = px.pie(
     height=600
 )
 fig.update_traces(textposition='inside', textinfo='percent+label')
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 fig = px.bar(
     classification_sentiment_agg,
@@ -548,7 +547,7 @@ fig = px.bar(
 )
 fig.update_yaxes(range=[0, 1])
 fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 st.write('\n')
 st.markdown('''---''')
