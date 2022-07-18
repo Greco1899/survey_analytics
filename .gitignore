@@ -1,7 +1,5 @@
 # custom
 survey_analytics.ipynb
-embeddings_unclean.pickle
-embeddings.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -9,6 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+import pickle
 
 # factor analysis
 from factor_analyzer import FactorAnalyzer
@@ -19,7 +20,6 @@ from scipy.stats import zscore
 # nlp
 from bertopic import BERTopic
 from transformers import pipeline
-import transformers
 
 # custom
 import survey_analytics_library as LIB
@@ -282,14 +282,18 @@ st.write('''
     ''')
 st.write('\n')
 
-# plot topics using unclean data
-fig = LIB.visualize_barchart_titles(
-    topic_model=topic_model_unclean,
-    subplot_titles=None,
-    n_words=5,
-    top_n_topics=8,
-    height=300
-)
+# # plot topics using unclean data
+# fig = LIB.visualize_barchart_titles(
+#     topic_model=topic_model_unclean,
+#     subplot_titles=None,
+#     n_words=5,
+#     top_n_topics=8,
+#     height=300
+# )
+
+# load and plot topics using unclean data
+with open('data/topics_tokyo_unclean.pickle', 'rb') as pkl:
+    fig = pickle.load(pkl)
 st.plotly_chart(fig, use_container_width=True)
 
 st.write('''
@@ -311,14 +315,18 @@ labelled_topics = [
     'Vikas Krishan (Indian Boxer)',
     ]
 
-# plot topics using clean data with stopwords removed
-fig = LIB.visualize_barchart_titles(
-    topic_model=topic_model,
-    subplot_titles=labelled_topics,
-    n_words=5,
-    top_n_topics=8,
-    height=300
-)
+# # plot topics using clean data with stopwords removed
+# fig = LIB.visualize_barchart_titles(
+#     topic_model=topic_model,
+#     subplot_titles=labelled_topics,
+#     n_words=5,
+#     top_n_topics=8,
+#     height=300
+# )
+
+# load plot topics using clean data with stopwords removed
+with open('data/topics_tokyo.pickle', 'rb') as pkl:
+    fig = pickle.load(pkl)
 st.plotly_chart(fig, use_container_width=True)
 
 st.write('''
@@ -381,7 +389,7 @@ st.write(f'''
     An an example, within the topic of 'Climate Change', we are interested in finance, politics, technology, and wildlife.  
     Using **Zero-shot Classification**, we can classify responses into one of these four categories.  
     As an added bonus, we can also find out how responders feel about the categories using **Sentiment Analysis**.  
-    We'll use a different set of 10,000 tweets related to climate change.  
+    We'll use a different set of {len(sentiment_results):,} tweets related to climate change.  
     ''')
 st.write('\n')
 
