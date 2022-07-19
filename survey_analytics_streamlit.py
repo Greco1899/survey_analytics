@@ -103,14 +103,20 @@ st.write('\n')
 st.subheader('Factor Analysis Suitability')
 st.write('''
     Before performing Factor Analysis on the data, we need to evaluate if it is suitable to do so.  
-    We apply two statistical tests (Bartlett's and KMO test) the data. 
+    We apply two statistical tests (Bartlett's and KMO test) the data.  
+    These two tests check if the variables in the data are correlated with each other.  
+    If there isn't any correlation between the variables, then the data is unsuitable for factor analysis as there are no natural clusters.  
     ''')
 
 # interactive button to run statistical test to determine suitability for factor analysis
 if st.button('Run Tests'):
-    # test with the null hypothesis that the correlation matrix is an identity matrix
+    # test if the data is an identity matrix
+    # an identify matrix is when the variables in the data are uncorrelated to other variables
+    # this means that the data is unsuitable for factor analysis as there are no natural clusters
     bartlett_sphericity_stat, p_value = calculate_bartlett_sphericity(x=df_factor_analysis)
-    # test how predictable of a variable by others
+    # test how predictable is a variable by variables in the data
+    # if variables are unpredictable or uncorrelated
+    # this means that the data is unsuitable for factor analysis as there are no natural clusters
     kmo_per_variable, kmo_total = calculate_kmo(x=df_factor_analysis)
     # print test results
     st.write(f'''
@@ -144,7 +150,8 @@ st.subheader('Number of Clusters?')
 st.write(f'''
     How many clusters or factors are appropriate for our data?  
     For Factor Analysis, we can determine the number of factors using the Kaiser criterion and a Scree Plot.  
-    We should include factors with an Eigenvalue of at least 1.0.  
+    The Kaiser criterion suggests that we should include factors with an eigenvalue of at least 1.  
+    E.g. With 25 variables, a factor with eigenvalue of 5 means that the factor explains the variance of 5 out of 25 variables.  
     ''')
 
 # plot scree plot
@@ -194,7 +201,7 @@ responder_factors['cluster'] = responder_factors.apply(lambda s: s.argmax(), axi
 
 # define list of factor columns
 list_of_factor_cols = [col for col in responder_factors.columns if 'factor_' in col]
-st.subheader('Fator Analysis Results')
+st.subheader('Factor Analysis Results')
 st.write('''
     Factor analysis gives us a loading for every factor for each responder.  
     We assign each responder to a factor or cluster based on their maximum loading across all the factors.  
