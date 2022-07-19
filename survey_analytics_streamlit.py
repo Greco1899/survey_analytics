@@ -571,5 +571,13 @@ fig.update_yaxes(range=[0, 1])
 fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
 st.plotly_chart(fig, use_container_width=True)
 
-st.write('\n')
 st.markdown('''---''')
+st.write('\n')
+st.write('\n')
+
+st.write('''
+    That's the end of the this demo 😎, the source code can be found on [Github](https://github.com/Greco1899/survey_analytics).  
+    ''')
+st.write('\n')
+st.image('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2565&q=80')
+st.caption('Photo by [Andrea De Santis](https://unsplash.com/@santesson89) on [Unsplash](https://unsplash.com).')
