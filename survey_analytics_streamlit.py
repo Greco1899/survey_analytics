@@ -149,9 +149,9 @@ scree_df = pd.DataFrame({'Eigenvalues':eigenvalues, 'Number of Factors':list(ran
 st.subheader('Number of Clusters?')
 st.write(f'''
     How many clusters or factors are appropriate for our data?  
-    For Factor Analysis, we can determine the number of factors using the Kaiser criterion and a Scree Plot.  
-    The Kaiser criterion suggests that we should include factors with an eigenvalue of at least 1.  
-    E.g. With 25 variables, a factor with eigenvalue of 5 means that the factor explains the variance of 5 out of 25 variables.  
+    For Factor Analysis, we can determine the number of factors using the eigenvalues and a scree plot.  
+    E.g. A factor with an eigenvalue of 5 means that we can represent the data from 5 variables with just 1 factor.
+    The Kaiser criterion suggests that we should include factors with an eigenvalue of at least 1, so the factors included should at least represent 1 variable.  
     ''')
 
 # plot scree plot
@@ -315,7 +315,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.write('''
     Now we can see that the topics have improved.  
-    We can make use of the top words in each topic to come up with a meaningful name.  
+    We can make use of the top words in each topic to come up with a meaningful name, this has to be done manually and is subjective.  
     ''')
 st.write('\n')
 st.write('\n')
@@ -506,7 +506,7 @@ sentiment_results.columns = ['tweet', 'sentiment']
 
 st.write(f'''
     The predictions get better with a higher threshold, but reduces the final number of tweets available for further analysis.  
-    Out of the 10,000 tweets, we are now left with {len(zero_shot_results_clean)}.  
+    Out of the {len(sentiment_results):,} tweets, we are now left with {len(zero_shot_results_clean)}.  
     We also add on the sentiment score for the tweets, the score here ranges from 0 (most negative) to 1 (most positive).  
     ''')
 
