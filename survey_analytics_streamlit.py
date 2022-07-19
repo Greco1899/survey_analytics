@@ -85,7 +85,7 @@ df_factor_analysis = data_survey.copy()
 st.subheader('Sample Survey Data')
 st.write('''
     Here we have a sample survey dataset where responders answer questions about their personality traits on a scale from 1 (Very Inaccurate) to 6 (Very Accurate).  
-    Factor Analysis gives us \'factors\' or groups of responders into groups can provide us insights about the different personalities of the responders.  
+    Factor Analysis gives us \'factors\' or clusters of responders which provide us insights about the different personalities of the responders.  
     ''')
 
 # split page into two columns
@@ -218,7 +218,7 @@ fa_z_scores = fa_z_scores.apply(lambda x: round(x, 2))
 
 st.write('''
     Aggregating the scores of the clusters gives us detail insights to the personality traits of the responders.  
-    The scores here have been normalised to Z-scores, a measure of how many standard deviations (SD) is the score away from the mean.  
+    The scores here have been normalised to Z-scores, which is a measure of how many standard deviations (SD) is the score away from the mean.  
     E.g. A Z-score of 0 indicates the score is identical to the mean, while a Z-score of 1 indicates the score is 1 SD away from the mean.  
     ''')
 # define colour map for highlighting cells
@@ -475,7 +475,7 @@ st.write(f'''
     Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
 
-st.dataframe(zero_shot_results)
+st.dataframe(zero_shot_results.style.format(precision=2))
 
 st.write(f'''
     We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
@@ -507,7 +507,7 @@ st.write(f'''
 # drop unused columns
 classification_sentiment_df = pd.merge(zero_shot_results_clean, sentiment_results[['sentiment']], how='left', left_index=True, right_index=True)
 classification_sentiment_df = classification_sentiment_df[['tweet', 'category', 'score', 'sentiment']]
-st.dataframe(classification_sentiment_df)
+st.dataframe(classification_sentiment_df.style.format(precision=2))
 
 st.write(f'''
     The difficult part for zero-shot classification is defining the right set of categories for each business case.  
