@@ -150,7 +150,7 @@ st.subheader('Number of Clusters?')
 st.write(f'''
     How many clusters or factors are appropriate for our data?  
     For Factor Analysis, we can determine the number of factors using the eigenvalues and a scree plot.  
-    E.g. A factor with an eigenvalue of 5 means that we can represent the data from 5 variables with just 1 factor.
+    E.g. A factor with an eigenvalue of 5 means that we can represent 5 variables from the data with just 1 factor.  
     The Kaiser criterion suggests that we should include factors with an eigenvalue of at least 1, so the factors included should at least represent 1 variable.  
     ''')
 
@@ -448,7 +448,11 @@ st.write('\n')
 st.write(f'''
     Here are the results:  
     ''')
-st.write(f'Input Text: *\'{sample_tweet}\'*')
+
+if user_defined_input:
+    st.write(f'Custom Text: *\'{sample_tweet}\'*')
+else:
+    st.write(f'Selected Tweet: *\'{sample_tweet}\'*')
 
 # get predictions from models
 zero_shot_sample = classifier_zero_shot(sample_tweet, candidate_labels)
@@ -547,7 +551,7 @@ fig = px.bar(
     classification_sentiment_agg,
     x='category',
     y='sentiment',
-    title='Average Sentiment of Tweets in Each Category <br><sup>Overall, the sentiment of the tweets are on the negative side.</sup>',
+    title='Average Sentiment of Tweets in Each Category',
     template='simple_white',
     width=1000,
     height=600
@@ -555,6 +559,11 @@ fig = px.bar(
 fig.update_yaxes(range=[0, 1])
 fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
 st.plotly_chart(fig, use_container_width=True)
+
+st.write('''
+    Overall, the sentiment of the tweets are on the negative side.  
+    'Technology' has the highest sentiment, 
+    ''')
 
 st.write('\n')
 st.markdown('''---''')
