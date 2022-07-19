@@ -22,7 +22,10 @@ from transformers import pipeline
 # custom
 import survey_analytics_library as LIB
 
-# st.set_page_config(layout='wide')
+st.set_page_config(
+     page_title='Survey Analytics',
+     layout='centered',
+    )
 
 # define data file path
 data_path = 'data' + os.sep
@@ -464,6 +467,10 @@ sentiment_label = 'positive'
 if sentiment_sample < 0.5:
     sentiment_label = 'negative'
 
+emoji = {
+    'positive':'😀',
+    'negative':'☹️',
+}
 st.write(f'''
     The main category is: **{zero_shot_sample['labels'][0]}** with a score of {round(zero_shot_sample['scores'][0], 2)}  
     Main category score ranges from 0 to 1, with 1 being very likely.  
@@ -471,7 +478,7 @@ st.write(f'''
     The full set of scores are: {dict(zip(zero_shot_sample['labels'], [round(score, 2) for score in zero_shot_sample['scores']]))}  
     Full set of scores cores add up to 1.    
     
-    The sentiment is: **{sentiment_label}** with a score of {round(sentiment_sample, 2)}  
+    The sentiment is: {emoji[sentiment_label]} **{sentiment_label}** with a score of {round(sentiment_sample, 2)}  
     Sentiment score ranges from 0 to 1, with 1 being very positive.  
     ''')
 st.write('\n')
@@ -486,7 +493,7 @@ st.write(f'''
     Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
 
-st.dataframe(zero_shot_results.style.format(precision=2))
+st.dataframe(zero_shot_results.style.highlight_max(axis=1, subset=['finance', 'politics', 'technology', 'wildlife'], props='color:white; background-color:green;').format(precision=2))
 
 st.write(f'''
     We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
@@ -497,7 +504,7 @@ st.write('\n')
 
 # interactive input for user to define candidate labels and tweet index for analysis
 with st.form('classification_score_threshold'):
-    user_defined_threshold = st.number_input('Enter score threshold (between 0.01 and 0.99):', min_value=0.01, max_value=0.99, value=0.7, step=0.05)
+    user_defined_threshold = st.number_input('Enter score threshold (between 0 and 1):', min_value=0.0, max_value=1.0, value=0.7, step=0.05)
     # submit form
     submit = st.form_submit_button('Set Threshold')
 st.write('\n')
@@ -518,7 +525,11 @@ st.write(f'''
 # drop unused columns
 classification_sentiment_df = pd.merge(zero_shot_results_clean, sentiment_results[['sentiment']], how='left', left_index=True, right_index=True)
 classification_sentiment_df = classification_sentiment_df[['tweet', 'category', 'score', 'sentiment']]
-st.dataframe(classification_sentiment_df.style.format(precision=2))
+
+def highlight_sentiment(value):
+    color = 'green' if value >= 0.5 else 'red'
+    return 'color:{}'.format(color)
+st.dataframe(classification_sentiment_df.style.applymap(highlight_sentiment, subset=['sentiment']).format(precision=2))
 
 st.write(f'''
     The difficult part for zero-shot classification is defining the right set of categories for each business case.  
@@ -559,11 +570,6 @@ fig = px.bar(
 fig.update_yaxes(range=[0, 1])
 fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
 st.plotly_chart(fig, use_container_width=True)
-
-st.write('''
-    Overall, the sentiment of the tweets are on the negative side.  
-    'Technology' has the highest sentiment, 
-    ''')
 
 st.write('\n')
 st.markdown('''---''')
