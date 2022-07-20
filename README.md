@@ -9,7 +9,7 @@ Factor Analysis - Clustering responders based on their answers
 <br>
 Topic Modelling - Uncovering topics from text responses
 <br>
-Zero-shot Classification - Classify text responses into user-defined labels
+Zero-shot Classification - Classifying text responses into user-defined labels
 <br>
 Sentiment Analysis - Quantifying sentiment of responders text responses
 <br>
