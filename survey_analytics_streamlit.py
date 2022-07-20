@@ -526,10 +526,7 @@ st.write(f'''
 classification_sentiment_df = pd.merge(zero_shot_results_clean, sentiment_results[['sentiment']], how='left', left_index=True, right_index=True)
 classification_sentiment_df = classification_sentiment_df[['tweet', 'category', 'score', 'sentiment']]
 
-def highlight_sentiment(value):
-    color = 'green' if value >= 0.5 else 'red'
-    return 'color:{}'.format(color)
-st.dataframe(classification_sentiment_df.style.applymap(highlight_sentiment, subset=['sentiment']).format(precision=2))
+st.dataframe(classification_sentiment_df.style.format(precision=2))
 
 st.write(f'''
     The difficult part for zero-shot classification is defining the right set of categories for each business case.  
