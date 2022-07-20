@@ -553,10 +553,16 @@ st.dataframe(classification_sentiment_df.style.format(precision=2))
 
 st.write(f'''
     The difficult part for zero-shot classification is defining the right set of categories for each business case.  
-    Some trial and error is required to find the appropriate words that can return the optimal results.   
+    Some trial and error is required to find the appropriate words that can return the optimal results.  
+    E.g. Do we want to differentiate between 'plants' and 'animals', or is 'wildlife' better as an overall category?  
     ''')
-st.write('\n')
 
+st.write(f'''
+    With sentiment analysis, the model typically has pitfalls such as not being able to detect sarcasm well.  
+    However, sarcastic responses are typically outliers in survey data and the data points would be smoothed out when we look at average the sentiment scores.  
+    ''')
+
+st.write('\n')
 # group by category, count tweets and get mean of sentiment
 classification_sentiment_agg = classification_sentiment_df.groupby(['category']).agg({'tweet':'count', 'sentiment':'mean'}).reset_index()
 classification_sentiment_agg = classification_sentiment_agg.rename(columns={'tweet':'count'})
@@ -590,6 +596,19 @@ fig = px.bar(
 fig.update_yaxes(range=[0, 1])
 fig.add_hline(y=0.5, line_width=3, line_color='darkgreen')
 st.plotly_chart(fig, use_container_width=True)
+
+st.write('''
+    To improve the performance of the models, further fine tuning can be done.  
+    We would also need to have labelled data to test against which is usually not readily available and can be difficult and expensive to obtain.  
+
+    If you're just thinking of exploring the feasibility of applying text analysis on your dataset, the pre-trained models used in this app will perfect!  
+    We've leveraged state-of-the-art deep learning models to jumpstart our analytics capabilities.  
+    The base models used for sentiment analysis and zero-shot classification and are called BERT (developed by Google) and BART (developed by Facebook) respectively.  
+   
+    These language models require large amounts of data and resources to be trained.  
+    BERT by Google was trained on the whole Wikipedia (about 2.5 billion words) and 11 thousand books, while BART was train the same plus 63 million news articles and other text scraped from the internet.  
+    An example of fine tuned model is FinBERT, which builds on top of BERT and further trained on financial news to analyse sentiment of finance related text.  
+    ''')
 
 st.markdown('''---''')
 st.write('\n')
