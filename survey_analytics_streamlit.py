@@ -70,10 +70,10 @@ sentiment_results, zero_shot_results = read_climate_change_results()
 # intro to app
 st.title('Survey Analytic Techniques')
 st.write('''
-    Organisations collect lots of data everyday through surveys, to get feedback, understand user behaviour, track trends across time etc.  
+    Organisations collect lots of data every day through surveys, to get feedback, understand user behaviour, track trends across time etc.  
     It can be resource intensive to craft a good survey and getting responders to fill in their answers, and we should make full use of the data obtained.  
 
-    Processing and analysing the data is tedious and time consuming but it doesn't have to be!  
+    Processing and analysing the data is tedious and time-consuming but it doesn't have to be!  
     We can employ the help of machines to comb through the data and provide actionable insights.  
     ''')
 
@@ -87,7 +87,7 @@ st.write('''
     - Factor Analysis - Clustering responders based on their answers
     - Topic Modelling - Uncovering topics from text responses
     - Zero-shot Classification - Classifying text responses into user-defined labels
-    - Sentiment Analysis - Quantifying sentiment of responders text responses
+    - Sentiment Analysis - Quantifying sentiment of responders' text responses
     ''')
 st.write('\n')
 st.write('\n')
@@ -96,9 +96,9 @@ st.markdown('''---''')
 st.header('Clustering Survey Responders')
 st.write('''
     Having knowledge and understanding about different groups of responders can help us to customise our interactions with them.  
-    E.g. Within the Financial Institutions we have banks, insurers, and payment services, and they have different structures and behaviours.  
-    We want to be able to cluster survey reponders into various groups based on how their answers.  
-    This can be achieved though **Factor Analysis**.   
+    E.g. Within Financial Institutions, we have banks, insurers, and payment services, and they have different structures and behaviours from one another.  
+    We want to be able to cluster survey responders into various groups based on how their answers.  
+    This can be achieved through **Factor Analysis**.   
     ''')
 st.write('\n')
 st.write('\n')
@@ -111,7 +111,7 @@ df_factor_analysis = data_survey.copy()
 st.subheader('Sample Survey Data')
 st.write('''
     Here we have a sample survey dataset where responders answer questions about their personality traits on a scale from 1 (Very Inaccurate) to 6 (Very Accurate).  
-    Factor Analysis gives us \'factors\' or clusters of responders which provide us insights about the different personalities of the responders.  
+    Factor Analysis gives us \'factors\' or clusters of responders which provide us insights into the different personalities of the responders.  
     ''')
 
 # split page into two columns
@@ -129,7 +129,7 @@ st.write('\n')
 st.subheader('Factor Analysis Suitability')
 st.write('''
     Before performing Factor Analysis on the data, we need to evaluate if it is suitable to do so.  
-    We apply two statistical tests (Bartlett's and KMO test) the data.  
+    We apply two statistical tests (Bartlett's and KMO test) to the data.  
     These two tests check if the variables in the data are correlated with each other.  
     If there isn't any correlation between the variables, then the data is unsuitable for factor analysis as there are no natural clusters.  
     ''')
@@ -250,7 +250,7 @@ fa_z_scores = fa_z_scores.groupby('cluster').mean().reset_index()
 fa_z_scores = fa_z_scores.apply(lambda x: round(x, 2))
 
 st.write('''
-    Aggregating the scores of the clusters gives us detail insights to the personality traits of the responders.  
+    Aggregating the scores of the clusters gives us detailed insights into the personality traits of the responders.  
     The scores here have been normalised to Z-scores, which is a measure of how many standard deviations (SD) is the score away from the mean.  
     E.g. A Z-score of 0 indicates the score is identical to the mean, while a Z-score of 1 indicates the score is 1 SD away from the mean.  
     ''')
@@ -289,7 +289,7 @@ st.write('\n')
 st.header('Uncovering Topics from Text Responses')
 st.write('''
     With feedback forms or open-ended survey questions, we want to know what are the responders generally talking about.  
-    One way would be to manually read all the collected response to get a sense of the topics within, however, this is very manual and subjective.  
+    One way would be to manually read all the collected responses to get a sense of the topics within, however, this is very manual and subjective.  
     Using **Topic Modelling**, we can programmatically extract common topics with the help of machine learning.  
     ''')
 st.write('\n')
@@ -307,7 +307,7 @@ st.write('\n')
 
 st.subheader('Visualising Topics')
 st.write('''
-    Lets generate some topics without performing any cleaning to the data.  
+    Let's generate some topics without performing any cleaning to the data.  
     ''')
 
 # load and plot topics using unclean data
@@ -318,7 +318,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.write('''
     From the chart above, we can see that 'Topic 0' and 'Topic 5' have some words that are not as meaningful.  
     For 'Topic 0', we already know that the tweets are about the Tokyo 2020 Olympics, having a topic for that isn't helpful.  
-    'Tokyo', '2020', 'Olympics', etc., we refer to these as *stopwords*, and lets remove them and regenerate the topics.  
+    'Tokyo', '2020', 'Olympics', etc., we refer to these as *stopwords*, and let's remove them and regenerate the topics.  
     ''')
 st.write('\n')
 
@@ -341,7 +341,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.write('''
     Now we can see that the topics have improved.  
-    We can make use of the top words in each topic to come up with a meaningful name, this has to be done manually and is subjective.  
+    We can use the top words in each topic to come up with a meaningful name, this has to be done manually and is subjective.  
     ''')
 st.write('\n')
 st.write('\n')
@@ -365,7 +365,7 @@ st.write('''
     The model has an understanding of the relationship between words, e.g. 'Andy Murray' is related to 'tennis'.  
     For example:  
     *'Cilic vs Menezes, after more than 3 hours and millions of unconverted match points, is one of the worst quality ten…'*  
-    This tweet is in the Topic 9 - Tennis without the word 'tennis' in it.  
+    This tweet is in Topic 9 - Tennis without the word 'tennis' in it.  
 
     Here we can inspect the individual tweets within each topic.  
     ''')
@@ -396,8 +396,8 @@ st.write('\n')
 
 st.header('Classifiying Text Responses and Sentiment Analysis')
 st.write(f'''
-    With survey responses, sometimes as a business user, we already have an general idea of what responders are talking about and we want to categorise or classify the responses accordingly.  
-    An an example, within the topic of 'Climate Change', we are interested in finance, politics, technology, and wildlife.  
+    With survey responses, sometimes as a business user, we already have a general idea of what responders are talking about and we want to categorise or classify the responses accordingly.  
+    As an example, within the topic of 'Climate Change', we are interested in finance, politics, technology, and wildlife.  
     Using **Zero-shot Classification**, we can classify responses into one of these four categories.  
     As an added bonus, we can also find out how responders feel about the categories using **Sentiment Analysis**.  
     ''')
@@ -498,7 +498,7 @@ st.write(f'''
     Main category score ranges from 0 to 1, with 1 being very likely.  
 
     The full set of scores are: {dict(zip(zero_shot_sample['labels'], [round(score, 2) for score in zero_shot_sample['scores']]))}  
-    Full set of scores cores add up to 1.    
+    Full set of scores adds up to 1.    
     
     The sentiment is: {emoji[sentiment_label]} **{sentiment_label}** with a score of {round(sentiment_sample, 2)}  
     Sentiment score ranges from 0 to 1, with 1 being very positive.  
@@ -512,14 +512,14 @@ zero_shot_results = zero_shot_results.rename(columns={'sequence':'tweet', 'label
 
 st.subheader('Zero-Shot Classification and Sentiment Analysis Results')
 st.write(f'''
-    Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
+    Let's review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
 
 st.dataframe(zero_shot_results.style.format(precision=2))
 
 st.write(f'''
     We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
-    It is likely that the tweet does not natually fall into one of the defined categories.  
+    It is likely that the tweet does not naturally fall into one of the defined categories.  
     Before performing further analysis on our results, we can set a score threshold to only keep predictions that we're confident in.  
     ''')
 st.write('\n')
@@ -538,7 +538,7 @@ zero_shot_results_clean = zero_shot_results.loc[(zero_shot_results['score'] >= u
 sentiment_results.columns = ['tweet', 'sentiment']
 
 st.write(f'''
-    The predictions get better with a higher threshold, but reduces the final number of tweets available for further analysis.  
+    The predictions get better with a higher threshold but reduces the final number of tweets available for further analysis.  
     Out of the {len(sentiment_results):,} tweets, we are now left with {len(zero_shot_results_clean)}.  
     We also add on the sentiment score for the tweets, the score here ranges from 0 (most negative) to 1 (most positive).  
     ''')
@@ -551,8 +551,8 @@ classification_sentiment_df = classification_sentiment_df[['tweet', 'category', 
 st.dataframe(classification_sentiment_df.style.format(precision=2))
 
 st.write(f'''
-    The difficult part for zero-shot classification is defining the right set of categories for each business case.  
-    Some trial and error is required to find the appropriate words that can return the optimal results.  
+    The difficult part of zero-shot classification is defining the right set of categories for each business case.  
+    Some trial and error are required to find the appropriate words that can return the optimal results.  
     E.g. Do we want to differentiate between 'plants' and 'animals', or is 'wildlife' better as an overall category?  
     ''')
 
@@ -598,15 +598,15 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.write('''
     To improve the performance of the models, further fine tuning can be done.  
-    We would also need to have labelled data to test against which is usually not readily available and can be difficult and expensive to obtain.  
+    We would also need labelled data to test against which is usually not readily available and can be difficult and expensive to obtain.  
 
-    If you're just thinking of exploring the feasibility of applying text analysis on your dataset, the pre-trained models used in this app will perfect!  
+    If you're just thinking of exploring the feasibility of applying text analysis on your dataset, the pre-trained models used in this app will be perfect!  
     We've leveraged state-of-the-art deep learning models to jumpstart our analytics capabilities.  
     The base models used for sentiment analysis and zero-shot classification and are called BERT (developed by Google) and BART (developed by Facebook) respectively.  
    
     These language models require large amounts of data and resources to be trained.  
-    BERT by Google was trained on the whole Wikipedia (about 2.5 billion words) and 11 thousand books, while BART was train the same plus 63 million news articles and other text scraped from the internet.  
-    An example of fine tuned model is FinBERT, which builds on top of BERT and further trained on financial news to analyse sentiment of finance related text.  
+    BERT by Google was trained on the whole Wikipedia (about 2.5 billion words) and 11 thousand books, while BART was trained the same plus 63 million news articles and other text scraped from the internet.  
+    An example of a fine-tuned model is FinBERT, which builds on top of BERT and is further trained on financial news to analyse the sentiment of finance-related text.  
     ''')
 
 st.markdown('''---''')
@@ -614,7 +614,7 @@ st.write('\n')
 st.write('\n')
 
 st.write('''
-    That's the end of the this demo 😎, the source code can be found on [Github](https://github.com/Greco1899/survey_analytics).  
+    That's the end of this demo 😎, the source code can be found on [Github](https://github.com/Greco1899/survey_analytics).  
     ''')
 st.write('\n')
 st.image('https://images.unsplash.com/photo-1620712943543-bcc4688e7485')
