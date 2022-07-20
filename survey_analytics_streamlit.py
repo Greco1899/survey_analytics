@@ -66,21 +66,44 @@ def read_climate_change_results():
 sentiment_results, zero_shot_results = read_climate_change_results()
 
 
-# write title of app
+
+# intro to app
 st.title('Survey Analytic Techniques')
+st.write('''
+    Organisations collect lots of data everyday through surveys, to get feedback, understand user behaviour, track trends across time etc.  
+    It can be resource intensive to craft a good survey and getting responders to fill in their answers, and we should make full use of the data obtained.  
+
+    Processing and analysing the data is tedious and time consuming but it doesn't have to be!  
+    We can employ the help of machines to comb through the data and provide actionable insights.  
+    ''')
+
+st.image('https://images.unsplash.com/photo-1496181133206-80ce9b88a853')
+st.caption('Photo by [Kari Shea](https://unsplash.com/@karishea) on [Unsplash](https://unsplash.com).')
+st.write('\n')
+st.write('\n')
+
+st.write('''
+    In this demonstration, we'll be covering
+    - Factor Analysis - Clustering responders based on their answers
+    - Topic Modelling - Uncovering topics from text responses
+    - Zero-shot Classification - Classify text responses into user-defined labels
+    - Sentiment Analysis - Quantifying sentiment of responders text responses
+    ''')
+st.write('\n')
+st.write('\n')
 st.markdown('''---''')
-
-
 
 st.header('Clustering Survey Responders')
 st.write('''
-    Having knowledge about different groups of responders can help us to customise our interactions with them.  
-    E.g. Within the Financial Institutions we have banks, insurers, and payment services.   
+    Having knowledge and understanding about different groups of responders can help us to customise our interactions with them.  
+    E.g. Within the Financial Institutions we have banks, insurers, and payment services, and they have different structures and behaviours.  
     We want to be able to cluster survey reponders into various groups based on how their answers.  
     This can be achieved though **Factor Analysis**.   
     ''')
 st.write('\n')
 st.write('\n')
+
+
 
 # copy data
 df_factor_analysis = data_survey.copy()
