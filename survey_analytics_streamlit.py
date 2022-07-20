@@ -389,7 +389,6 @@ st.write(f'''
 st.dataframe(topic_results.loc[(topic_results['Topic'] == inspect_topic)])
 st.markdown('''---''')
 st.write('\n')
-st.write('\n')
 
 
 
@@ -618,7 +617,7 @@ st.write('''
     That's the end of the this demo 😎, the source code can be found on [Github](https://github.com/Greco1899/survey_analytics).  
     ''')
 st.write('\n')
-st.image('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2565&q=80')
+st.image('https://images.unsplash.com/photo-1620712943543-bcc4688e7485')
 st.caption('Photo by [Andrea De Santis](https://unsplash.com/@santesson89) on [Unsplash](https://unsplash.com).')
 
 
