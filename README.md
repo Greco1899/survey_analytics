@@ -2,8 +2,17 @@
 This interactive app demonstrates some machine learning techniques that can be applied to survey data.
 <br>
 <br>
-
-Techniques inlcude:
+Organisations collect lots of data every day through surveys, to get feedback, understand user behaviour, track trends across time etc.
+<br>
+It can be resource intensive to craft a good survey and getting responders to fill in their answers, and we should make full use of the data obtained.
+<br>
+<br>
+Processing and analysing the data is tedious and time-consuming but it doesn't have to be!
+<br>
+We can employ the help of machines to comb through the data and provide actionable insights.  
+<br>
+<br>
+Techniques include:
 <br>
 Factor Analysis - Clustering responders based on their answers
 <br>
@@ -11,7 +20,7 @@ Topic Modelling - Uncovering topics from text responses
 <br>
 Zero-shot Classification - Classifying text responses into user-defined labels
 <br>
-Sentiment Analysis - Quantifying sentiment of responders text responses
+Sentiment Analysis - Quantifying sentiment of responders' text responses
 <br>
 <br>
 
