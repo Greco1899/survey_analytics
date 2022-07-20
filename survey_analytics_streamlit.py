@@ -86,7 +86,7 @@ st.write('''
     In this demonstration, we'll be covering
     - Factor Analysis - Clustering responders based on their answers
     - Topic Modelling - Uncovering topics from text responses
-    - Zero-shot Classification - Classify text responses into user-defined labels
+    - Zero-shot Classification - Classifying text responses into user-defined labels
     - Sentiment Analysis - Quantifying sentiment of responders text responses
     ''')
 st.write('\n')
@@ -601,3 +601,5 @@ st.write('''
 st.write('\n')
 st.image('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2565&q=80')
 st.caption('Photo by [Andrea De Santis](https://unsplash.com/@santesson89) on [Unsplash](https://unsplash.com).')
+
+
