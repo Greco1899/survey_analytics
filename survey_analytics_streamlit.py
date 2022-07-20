@@ -493,7 +493,7 @@ st.write(f'''
     Lets review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
 
-st.dataframe(zero_shot_results.style.highlight_max(axis=1, subset=['finance', 'politics', 'technology', 'wildlife'], props='color:white; background-color:green;').format(precision=2))
+st.dataframe(zero_shot_results.style.format(precision=2))
 
 st.write(f'''
     We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
