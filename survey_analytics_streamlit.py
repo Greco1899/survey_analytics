@@ -512,10 +512,10 @@ zero_shot_results = zero_shot_results.rename(columns={'sequence':'tweet', 'label
 
 st.subheader('Zero-Shot Classification and Sentiment Analysis Results')
 st.write(f'''
-    Let's review all the tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
+    Let's review some tweets and how they fall into the categories of finance, politics, technology, and wildlife.  
     ''')
 
-st.dataframe(zero_shot_results.style.format(precision=2))
+st.dataframe(zero_shot_results.iloc[:2000].style.format(precision=2))
 
 st.write(f'''
     We can observe that the model does not have strong confidence in predicting the categories for some of the tweets.  
