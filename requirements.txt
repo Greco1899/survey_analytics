@@ -2,9 +2,10 @@ streamlit==1.11.1
 bertopic==0.11.0
 cffi==1.15.0
 factor_analyzer==0.4.0
-joblib==1.1.0
+joblib==1.1.1
 pandas==1.4.2
 plotly==5.6.0
 scipy==1.7.3
 seaborn==0.11.2
 transformers==4.20.1
+wheel>=0.38.0 # not directly required, pinned by Snyk to avoid a vulnerability
