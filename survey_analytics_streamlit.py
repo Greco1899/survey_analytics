@@ -484,7 +484,7 @@ zero_shot_sample = classifier_zero_shot(sample_tweet, candidate_labels)
 sentiment_sample = classifier_sentiment(sample_tweet)
 
 # get sentiment
-sentiment_sample = sentiment_sample[1].get('score')
+sentiment_sample = sentiment_sample[0][1].get('score')
 sentiment_label = 'positive'
 if sentiment_sample < 0.5:
     sentiment_label = 'negative'
