@@ -1,4 +1,4 @@
-streamlit==1.11.1
+streamlit==1.27.0
 bertopic==0.11.0
 cffi==1.15.0
 factor_analyzer==0.4.0
