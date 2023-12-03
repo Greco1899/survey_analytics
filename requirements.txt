@@ -1,4 +1,4 @@
-streamlit==1.11.1
+streamlit==1.27.0
 bertopic==0.11.0
 cffi==1.15.0
 factor_analyzer==0.4.0
@@ -7,8 +7,12 @@ pandas==1.4.2
 plotly==5.6.0
 scipy==1.7.3
 seaborn==0.11.2
-transformers==4.23.0
+transformers==4.30.0
 setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
 wheel>=0.38.0 # not directly required, pinned by Snyk to avoid a vulnerability
 altair==4.0
 tornado>=6.3.2 # not directly required, pinned by Snyk to avoid a vulnerability
+numpy>=1.22.2 # not directly required, pinned by Snyk to avoid a vulnerability
+pillow>=10.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+pyarrow>=14.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+validators>=0.21.0 # not directly required, pinned by Snyk to avoid a vulnerability
